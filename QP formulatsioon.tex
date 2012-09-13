@@ -1,0 +1,23 @@
+\documentclass[twosided, 11pt, a4paper]{article}
+\usepackage[estonian]{babel}
+\usepackage{amsmath}
+
+\title{Tootmisvarade Optimeerimine}
+\author{Peeter Meos}
+
+\begin{document}
+
+\maketitle
+
+\section{Formulatsioon}
+\begin{align}
+\mathrm{max}\; \prod &= \sum_{i=1}^n P(x_i) - \sum_{i=1}^n C(x_i)\nonumber\\
+\mathrm{subject \; to} &\nonumber \\
+&\sum_{i=1}^n x_i \le C \nonumber \\
+&x_i \ge 0 \; \forall i \in \{1,2 \dots n\} \nonumber \\
+\nonumber
+\end{align}
+Muutuja $x_i$ t\"ahistab k\"utuse $i$ kasutusintensiivsust m\~o\~odetuna \"uhikuga \emph{tonni tunnis}.
+\section {Lahendusalgoritm}
+Quadratic programming.
+\end{document}
