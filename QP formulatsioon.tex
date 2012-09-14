@@ -1,23 +1,71 @@
 \documentclass[twosided, 11pt, a4paper]{article}
 \usepackage[estonian]{babel}
 \usepackage{amsmath}
+\usepackage{titling}
+
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
 
 \title{Tootmisvarade Optimeerimine}
-\author{Peeter Meos}
+\subtitle{Eesti Energia, Energiakaubandus}
+\author{Allan Puusepp \\ Taaniel Uleksin \\ Peeter Meos }
 
 \begin{document}
 
 \maketitle
 
-\section{Formulatsioon}
+\section{\"Ulesande p\"ustitus}
+Eesti Energia otsib  lahendust \"ulesandele toota aastases perioodis tunnise t\"psusega kasumit maksimeerival viisil elektrit. Primaarseteks energiakandjateks on erinevate kaevanduste erinevate omadustega p\~olevkivi, millest toodavad elektrit erinevad elektrijaamad. Elektrijaamade kasutegurid on teada, kulufunktsioon on laias laastus teada koos lisanduvate saastekuludega. Tulufunktsioon on \"uldjoontes teada, aga on veel formuleerimisel.
+\subsection{Teadaolevad piirangud}
+\begin{enumerate}
+\item Iga elektrijaamal on maksimumv\~oimsus, mis on ajaliselt muutuv. Sel viisil on v\~oimalik modelleerida hooldust ja \emph{downtime} m\~oju.
+\item Elektrijaama v\~oimsust ei saa suurendada ega v\"ahendada rohkem kui etteantud $\Delta$ \emph{MW} tunnis. 
+\item Igal kaevandusel ja seega igal k\"utuset\"u\"ubil on \"ulemine mahupiir, millest rohkem vastavat k\"utust toota ei ole v\~oimalik.
+\item Elektritootmine peab olema tagatud etteantud miinimumv\~oimsustel.
+\end{enumerate}
+
+\subsection{Katmata alad}
+Antud hetkel ja k\"aesolevas formuleeringus ei sisaldu \~olitootmisega seotud tulusid ja kulusid. J\"argmistes iteratsioonides peaks optimeerimismudel sisaldama peale elektritootmise ka \~olitootmist ning ilmselt lisama piirangu, milles elektritootmine ei tohi minna nulli, st. k\~oik elektrienergia ostetakse sisse ja Eesti Energia keskendub \~olitootmisele.
+
+\section{Optimeerimis\"ulesande matemaatiline formulatsioon}
 \begin{align}
 \mathrm{max}\; \prod &= \sum_{i=1}^n P(x_i) - \sum_{i=1}^n C(x_i)\nonumber\\
 \mathrm{subject \; to} &\nonumber \\
-&\sum_{i=1}^n x_i \le C \nonumber \\
-&x_i \ge 0 \; \forall i \in \{1,2 \dots n\} \nonumber \\
+&\sum_{j=1}^n x_{ij} \le\mathrm{CAP}_i \; \forall j \in \{1,2,\dots,m\}\nonumber \\
+&x_i \ge 0 \; \forall i \in \{1,2, \dots ,n\} \nonumber \\
 \nonumber
 \end{align}
-Muutuja $x_i$ t\"ahistab k\"utuse $i$ kasutusintensiivsust m\~o\~odetuna \"uhikuga \emph{tonni tunnis}.
+Umbkaudu hinnates sisaldab see formulatsioon $225$ erinevat kombinatsiooni k\"utusest ja elektrijaamast, mis laotub laiali \"uhe aasta peale tunniajalistes vahemikes. Seega halvimal juhul peab optimeerimismudel suutma hallata ca. 1 971 000 muutjat.
+Kulufunktsioon omab j\"argnevat \"uldist kuju
+\begin{align}
+C = \sum_{j=1}^m C_{const j} &+ \sum_{i=1}^n\sum_{j=1}^m C_{CO_2 ij}x_{ij} \nonumber \\
+& + \sum_{i=1}^n\sum_{j=1}^m C_{SO_x ij}x_{ij} \nonumber \\
+& + \sum_{i=1}^n\sum_{j=1}^m C_{N ij}x_{ij} \nonumber \\
+& + \sum_{i=1}^n C_{f i}\sum_{j=1}^m x_{ij} \nonumber \\
+\nonumber
+\end{align}
+
+Tulufunktsioon omab j\"argnevat \"uldist kuju
+\begin{align}
+P(x_i) &= \sum_{j=1}^m P_{ij}(x_{ij})\nonumber \\
+\nonumber
+\end{align}
+
+Muutuja $x_{ij}$ t\"ahistab k\"utuse $i$ kasutusintensiivsust elektrijaamas $j$ m\~o\~odetuna \"uhikuga \emph{tonni tunnis}.
 \section {Lahendusalgoritm}
-Quadratic programming.
+Quadratic programming kujul
+\begin{align}
+\mathrm{min}\; Z = \sum\mathbf{z}_1 + \sum\mathbf{z}_2 &\nonumber \\
+\mathrm{subject \; to}\qquad \qquad\qquad  &\nonumber\\
+\mathbf{Qx} + \mathbf{A}^T\mathbf{u} - \mathbf{y} + \mathbf{z}_1 &= \mathbf{c}^T \nonumber\\
+\mathbf{Ax} + \mathbf{v} - \mathbf{z}_2 &= \mathbf{b} \nonumber \\
+\mathbf{x}^T\mathbf{y} + \mathbf{u}^T\mathbf{v} &= \mathbf{0} \nonumber \\
+\mathbf{x} \ge 0, \quad\mathbf{u} \ge 0, & \quad\mathbf{y} \ge 0, \quad\mathbf{v} \ge 0 \nonumber \\
+\nonumber
+\end{align}
+Alternatiivina, juhul kui mittelineaarsed funktsioonid on aproksimeeritavad t\"ukati lineaarsetena saaks kasutada separable programmingut. Samas sisaldab see l\"ahenemine potentsiaalset ohtu niigi suure muutujate arvu mitmekordistumises.
 \end{document}
