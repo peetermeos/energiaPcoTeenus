@@ -1,4 +1,4 @@
-\documentclass[twosided, 11pt, a4paper]{article}
+\documentclass[twosided, 10pt, a4paper]{article}
 \usepackage[estonian]{babel}
 \usepackage{amsmath}
 \usepackage{titling}
@@ -14,48 +14,121 @@
 \subtitle{Eesti Energia, Energiakaubandus}
 \author{Allan Puusepp \\ Taaniel Uleksin \\ Peeter Meos }
 
+
 \begin{document}
 
 \maketitle
 
+NB! TEGU ON VEEL \"A\"ARMISELT POOLIKU TEKSTIGA!
+
+%%%%%%%%%% ÜLESANDE PÜSTITUS
 \section{\"Ulesande p\"ustitus}
-Eesti Energia otsib  lahendust \"ulesandele toota aastases perioodis tunnise t\"psusega kasumit maksimeerival viisil elektrit. Primaarseteks energiakandjateks on erinevate kaevanduste erinevate omadustega p\~olevkivi, millest toodavad elektrit erinevad elektrijaamad. Elektrijaamade kasutegurid on teada, kulufunktsioon on laias laastus teada koos lisanduvate saastekuludega. Tulufunktsioon on \"uldjoontes teada, aga on veel formuleerimisel.
+Eesti Energia otsib  lahendust \"ulesandele toota aastases perioodis tunnise t\"apsuse\-ga kasumit maksimeerival viisil elektrit. Primaarseteks energiakandjateks on erinevate kaevanduste erinevate omadustega p\~olevkivi, millest toodavad elektrit erinevad  tootmis\"uksused. Tootmis\"uksuste kasutegurid on teada, kulufunktsioon on laias laastus teada koos lisanduvate saastekuludega. Tulufunktsioon on \"uldjoontes teada, aga on veel formuleerimisel (vt j\"argmine l\~oik).
+
+\subsection{Sihifunktsioon}
+Sihifunktsiooniks\footnote{ing k objective function - minu eestikeelne terminoloogia on endiselt roostes ja tahab lihvimist ning v\"arskendamist - PM} on sisuliselt Tulu - Kulu. Tulufunktsioon koosneb mitmest kihist ja omavahel s\~oltuvast komponendist. Teades ajaloolisi elektri Spot turu hinna aegridu on v\~oimalik modelleerida MW turuhinda funktsioonina ajast (nii kuupa\"ev kui kellaaeg). Lisaks sellele, on (\"uldjoontes) teada elektrijaamade kasutegurid ning v\~oimsused (MW) per tonn etteantud k\"utuste segu. Kulufunktsioon sisaldab saastekulusid, primaarse energiakandja kaevandamise ja transpordikulusid, infrastruktuuri p\"usikulusid ning ladustamiskulusid.
+
+Sihifunktsiooni kuju on praegusel hetkel ebaselge. Esimeste anal\"u\"uside p\~ohjal on alust oletada, et funktsioonis leidub mitte-lineaarseid komponente. Kirjanduses on Pichet Sriyanyong modelleerinud sihifunktsiooni kuuluvaid toot\-mis\-v\~oi\-me\-ku\-se, saaste ning k\"utusekulu komponente kas ruutpol\"unoomide v\~oi funktsioonina, mis koosneb t\"ukiti ruutpol\"unoomidest \cite{sriyanyong}.
+
+Optimeerimise ajaline t\"apsus on k\"aesoleval hetkel otsustamata. Allj\"argnev formulatsioon eeldab tunnist t\"apsust, aga see, eriti pikemas ajaraamis nagu aasta, osutub t\~oen\"aoliselt liiga t\a"pseks, kuna Nordpool Spot hinna progrnoosimine tunniajalise t\"apsusega 12 kuud tulevikku sisaldab endas teadmata faktoreid, mis kardetavasti muudavad mudeli poolt pakutud optimaalse lahenduse kontrollimatuks. On v\~oimalik, et pikemat optimumi otsiv mudel ei peaks minema suuremasse detaili kui \"uhe p\"aeva t\"apsusega modelleerimine\footnote{Hetkel t\"aielik minupoolne spekulatsioon, mis ei p\~ohine empiirilisel t\~oendusmaterjalil - PM}. Seega oleks kasulik formuleerida v\"ahemalt kaks teineteist toetavat mudelit - tunnise detailsusastmega optimeerimismudel l\"ahituleviku tarbeks (1 n\"adal) ning \"uldine mudel aastaseks perioodiks v\~oi pikemaks. Juhul kui pikema ajaperioodi sisendiks olnud eeldused on lubatud piirides, on tema v\"aljund kasutatav l\"uhema ajaperioodi mudeli lisapiiranguks, mis lihtsustab l\"uhiajalise optimumi leidmist. Lisaks sellele, kuna l\"uhiajalise mudeli \emph{solution space} on tunduvalt piiratum, oleks m\~otet uurida, kas seda mudelit saaks formuleerida v\"ahemalt t\"ukati lineaarsena ning kasutada lahendamiseks m\~ond variatsiooni Simplex algoritmist.
+
 \subsection{Teadaolevad piirangud}
 \begin{enumerate}
 \item Iga elektrijaamal on maksimumv\~oimsus, mis on ajaliselt muutuv. Sel viisil on v\~oimalik modelleerida hooldust ja \emph{downtime} m\~oju.
-\item Elektrijaama v\~oimsust ei saa suurendada ega v\"ahendada rohkem kui etteantud $\Delta$ \emph{MW} tunnis. 
+\item Tootmis\"uksuse v\~oimsust ei saa suurendada ega v\"ahendada rohkem kui etteantud $\Delta$ \emph{MW} tunnis. 
 \item Igal kaevandusel ja seega igal k\"utuset\"u\"ubil on \"ulemine mahupiir, millest rohkem vastavat k\"utust toota ei ole v\~oimalik.
 \item Elektritootmine peab olema tagatud etteantud miinimumv\~oimsustel.
+\item Tootmis\"uksustel on laod k\"utuste ladustamiseks piiratud mahuga.
+\item Tootmis\"uksuste laovarud ei tohi minna alla lubatud piirm\"a\"ara.
+\item Heitmed peavad j\"a\"ama $SO_2$ kvoodi piiridesse
 \end{enumerate}
+
+\subsection{K\"utuste transport tootmis\"uksuste ladudesse ja hoiustamine}
+Kuna k\"utuste transport tootmis\"uksuste juures olevatesse ladudesse ning nende ladudest ka\-su\-tu\-se\-le\-v\~ott on mitte-triviaalne omades keerulist kulustruktuuri ning mahupiiranguid nii transpordis kui ka ladustamises, tuleb see protsess modelleerida eraldi optimeerimis\"ulesandena. Transport ladudesse on kirjeldatav kui standardne transpordi\"ulesanne\cite{hillier}. K\"utuse k\"aitumine ladudes on eraldi modelleeritav kui j\"ar\-je\-kor\-ra\-teo\-ree\-ti\-li\-ne protess, mis oma sisendi ning v\"al\-jun\-di intensiivsusega seob trans\-por\-di\"ules\-an\-de mudeli \"ul\-di\-se optimeerimismudeliga\cite{ross}.
+Eeldades, et lattu sisenevad ja sealt v\"aljuvad koormad k\"aituvad Poissoni protsessi alusel\footnote{T\~oestamata spekulatsioon, teoorias peaks, praktikas on see v\~oib-olla palju s\"ustemaatilisem}, avaldub lattu saabuva k\"utuse hulk j\"argnevalt:
+\begin{align}
+W = \frac{1}{\mu - \lambda} &; W_Q = W - \frac{1}{\lambda} \nonumber \\
+L_Q = \lambda W_Q & = \frac{\lambda^2}{\mu(\mu - \lambda)} \\
+\nonumber
+\end{align}
+Avaldades siit $\lambda$ saame vajalikuks saabuva k\"utuse hulgaks
+\begin{align}
+\lambda^2 &= L_Q\mu(\mu - \lambda) \nonumber \\
+\lambda &= \frac{-\mu \pm \sqrt{\mu^2 + 4L_Q\mu^2}}{2} \nonumber \\
+&= \frac{\mu}{2}\bigg[ -1 \pm \sqrt{1 + 4L_Q}\bigg] \\
+\nonumber
+\end{align}
+Siia on vaja lisada selgitus ning uurida, kas on alust k\~ohutundel, et selle $-1$ v\~oib $L_Q$ suuruse t\~ottu lihtsustuseks \"ara j\"atta. N\"u\"ud omades teavet, millise keskmise intensiivsusega peab saabuma k\"utus lattu, saab seda kasutada parameetri ja piiranguna transpordi\"ulesandele. Tegelikkuses on protsess ilmselt keerulisem, kuna laost tootmis\"uksusesseminev k\"utus on s\~oltuv ajast ning omab kuju $\mu(t)$, mis n\~ouab ka saabumistelt vormi $\lambda(t)$\cite{bartholdi}. 
 
 \subsection{Katmata alad}
 Antud hetkel ja k\"aesolevas formuleeringus ei sisaldu \~olitootmisega seotud tulusid ja kulusid. J\"argmistes iteratsioonides peaks optimeerimismudel sisaldama peale elektritootmise ka \~olitootmist ning ilmselt lisama piirangu, milles elektritootmine ei tohi minna nulli, st. k\~oik elektrienergia ostetakse sisse ja Eesti Energia keskendub \~olitootmisele.
 
+%%%%%%%%%% FORMULATSIOON
 \section{Optimeerimis\"ulesande matemaatiline formulatsioon}
 \begin{align}
-\mathrm{max}\; \prod &= \sum_{i=1}^n P(x_i) - \sum_{i=1}^n C(x_i)\nonumber\\
+\mathrm{max}\; \prod &= \sum_{i,j,t} \mathrm{R}(x_{i,j,t}) - \sum_{i,j,t} \mathrm{C}(x_{i,j,t})\nonumber\\
 \mathrm{subject \; to} &\nonumber \\
-&\sum_{j=1}^n x_{ij} \le\mathrm{CAP}_i \; \forall j \in \{1,2,\dots,m\}\nonumber \\
-&x_i \ge 0 \; \forall i \in \{1,2, \dots ,n\} \nonumber \\
+&\sum_{j} x_{ijt} \le\mathrm{F}_{\mathrm{max} \: it} \; \forall i \in \{1,2,\dots,n\} , t \in \{1,2,\dots,T\} \nonumber \\
+&\sum_i \mathrm{P}_{jt}(x_{ijt}) \le\mathrm{P}_{\mathrm{max} \: jt} \; \forall j \in \{1,2,\dots,m\} , t \in \{1,2,\dots,T\}\nonumber \\
+&\sum_{i} \mathrm{P}_{jt}(x_{ijt}) \ge\mathrm{P}_{\mathrm{min} \: jt} \; \forall j \in \{1,2,\dots,m\} , t \in \{1,2,\dots,T\}\nonumber \\
+&\sum_{i} \mathrm{P}_{jt}(x_{ijt}) - \sum_{i} \mathrm{P}_{jt+1}(x_{ijt}) \ge -\Delta_{up \; j} \forall j \in \{1,2,\dots,m\} , t \in \{1,2,\dots,T-1\} \nonumber \\
+&\sum_{i} \mathrm{P}_{jt}(x_{ijt}) - \sum_{i} \mathrm{P}_{jt+1}(x_{ijt}) \le \Delta_{down \; j} \forall j \in \{1,2,\dots,m\} , t \in \{1,2,\dots,T-1\} \nonumber \\
+&x_{ijt} \ge 0 \; \forall i \in \{1,2, \dots ,n\},  j \in \{1,2, \dots ,m\},  t \in \{1,2, \dots ,T\} \nonumber \\
 \nonumber
 \end{align}
-Umbkaudu hinnates sisaldab see formulatsioon $225$ erinevat kombinatsiooni k\"utusest ja elektrijaamast, mis laotub laiali \"uhe aasta peale tunniajalistes vahemikes. Seega halvimal juhul peab optimeerimismudel suutma hallata ca. 1 971 000 muutjat.
+Kus
+\begin{itemize}
+\item[ ] $x_{ijt} \equiv$ k\"utuse $i$ kasutusintensiivsus tootmis\"uksuses $j$ ajalt $t$ m\~o\~odetuna \"uhikuga \emph{tonni tunnis}.
+\item[ ] $\mathrm{F}_{\mathrm{max} \: i} \equiv$ k\"utuseallika (kaevanduse) $i$ maksimumv\~oime toota ajal $t$
+\item[ ] $\mathrm{P}_{j} \equiv$  tootmis\"uksuse $j$ v\~oimsus kasutades k\"utusekombinatsiooni $x_{ij}$ ajal $t$
+\item[ ] $\mathrm{P}_{\mathrm{max} \: j} \equiv$   tootmis\"uksuse $j$ maksimumv\~oimsus ajal $t$
+\item[ ] $\Delta_{up \; j} \equiv$ maksimaalne lubatud v\~oimsuse suurendamine  tootmis\"uksusele $j$ \"uhe tunni jooksul
+\item[ ] $\Delta_{down \; j} \equiv$ maksimaalne lubatud v\~oimsuse v\"ahendamine  tootmis\"uksusele $j$ \"uhe tunni jooksul
+\end{itemize}
+
+Umbkaudu hinnates sisaldab see formulatsioon $225$ erinevat kombinatsiooni k\"utusest ja  tootmis\"uksusest, mis laotub laiali \"uhe aasta peale tunniajalistes vahemikes. Seega halvimal juhul peab optimeerimismudel suutma hallata ca. 1 971 000 muutjat.
 Kulufunktsioon omab j\"argnevat \"uldist kuju
 \begin{align}
-C = \sum_{j=1}^m C_{const j} &+ \sum_{i=1}^n\sum_{j=1}^m C_{CO_2 ij}x_{ij} \nonumber \\
-& + \sum_{i=1}^n\sum_{j=1}^m C_{SO_x ij}x_{ij} \nonumber \\
-& + \sum_{i=1}^n\sum_{j=1}^m C_{N ij}x_{ij} \nonumber \\
-& + \sum_{i=1}^n C_{f i}\sum_{j=1}^m x_{ij} \nonumber \\
+C(x_{ijt}) &= \sum_{j} C_{const}(j) + \sum_{i,j} C_{CO_2}(i,j)x_{ij} \nonumber \\
+& + \sum_{i,j} C_{SO_x}(i,j)x_{ij} + \sum_{i,j} C_{N}(i,j)x_{ij} \nonumber \\
+& + \sum_{i} C_{fuel}(i)\sum_j x_{ij} + \sum_{j} C_{pwr}(j)\sum_i x_{ij} \nonumber \\
 \nonumber
 \end{align}
 
 Tulufunktsioon omab j\"argnevat \"uldist kuju
 \begin{align}
-P(x_i) &= \sum_{j=1}^m P_{ij}(x_{ij})\nonumber \\
+R(x_{ijt}) &= \sum_{t}P(t)\sum_{i,j} Q_{ijt}(x_{ijt})\nonumber \\
 \nonumber
 \end{align}
+Kus 
+\begin{itemize}
+\item[ ] $R(x_{ijt}) \equiv$ Tootmis\"uksuses $j$  k\"utusest $i$ aja\"uhikul $t$ toodetud 1 MWh elektri m\"u\"ugist saadud tulu
+\item[ ] $P(t) \equiv$ Toote 1 MWh keskmine hind aja\"uhiku $t$ ajal
+\item[ ] $Q_{ijt}(x_{ijt} \equiv$ Tootmis\"uksuses $j$  k\"utusest $i$ aja\"uhikul $t$ toodetud elektri kogus (MWh)
+\end{itemize}
 
-Muutuja $x_{ij}$ t\"ahistab k\"utuse $i$ kasutusintensiivsust elektrijaamas $j$ m\~o\~odetuna \"uhikuga \emph{tonni tunnis}.
+%%%%%%%% Copypaste Allani wordifailist. See tuleb lahti kirjutada korralikus notatsioonis
+\emph{J\"argnev on Allani tekstist kopeeritud.}
+Tulu saadakse, kui kogu toote d toodetav kogus m\"u\"uakse maha referentshinnaga ning sel juhul on tootest d saadav tulu.
+ 
+Valemis olev viimane summa on v\~oetud \"ule nende tootmisjaamade v\~oimsuste, kus tooteks on d.
+ 
+Kui tootega d ei kaubelda b\"orsil, siis v\~oetakse toote d referentshinnaks ajavahemikus T kaetud lepingute hind koos ennustatava tootehinnaga.
+ 
+Kui tootega d kaubeldakse b\"orsil, siis toote referentshinnaks ajavahemikus T v\~oetakse b\"orsil kaubeldava toote d ennustatav hind.
+ 
+Kui b\"orsil kaubeldava tootele d kirjutatakse ka tuletisinstrumente, siis v\~oetakse toote d referentshinnaks antud vahemikku jäävate tuletisinstrumentidega kaetud perioodide ja positsioonide hinnad koos b\"orsi ennustatava hinnaga.
+ 
+Kuna b\"orsil kaubeldavate toodete tasakaaluhind s\~oltub kogusest, siis s\~oltub b\"orsi tasakaaluhind ka b\"orsile m\"u\"udavast kogusest.
+
+Toote referentshinna s\~oltuvus kogusest Q ei pruugi olla pidev funktsioon t\"anu tuletisinstrumentidega kaetud positsioonidele ning seega on võimalik referentshindade s\~oltuvust modelleerida kahel viisil:
+\begin{itemize}
+\item Kirjeldada toodete referentshindasi t\"ukati pidevate lineaarsete funktsioonidega.
+\item Toote referentshinna kogusest s\~oltuvuse modelleerimiseks arvutada referentshinna jaotus m\"u\"udava koguse v\"a\"artuste Q j\"argi. 
+\end{itemize}
+\emph{Kopeerimine l\~opeb siin.}
+%%%%%%%%% Copypaste lõpeb siin
+
 \section {Lahendusalgoritm}
 Quadratic programming kujul
 \begin{align}
@@ -67,5 +140,91 @@ Quadratic programming kujul
 \mathbf{x} \ge 0, \quad\mathbf{u} \ge 0, & \quad\mathbf{y} \ge 0, \quad\mathbf{v} \ge 0 \nonumber \\
 \nonumber
 \end{align}
-Alternatiivina, juhul kui mittelineaarsed funktsioonid on aproksimeeritavad t\"ukati lineaarsetena saaks kasutada separable programmingut. Samas sisaldab see l\"ahenemine potentsiaalset ohtu niigi suure muutujate arvu mitmekordistumises.
+Alternatiivina, juhul kui sihifunktsioonis esinevad mittelineaarsed komponendid on aproksimeeritavad t\"u\-ka\-ti lineaarsetena saaks kasutada separable programmingut. Samas sisaldab see l\"a\-he\-ne\-mi\-ne potentsiaalset ohtu niigi suure muutujate arvu mitmekordistumises.
+
+Kirjandus on l\"ahenenud optimeerimis\"ulesande lahendamisele kasutades heuristilisi meetodeid\cite{sriyanyong}\cite{zhang}. Samas ei ole kirjeldatud heuristiliste meetodite eelis k\"aesoleva \"ulesande optimumi leidmiseks kindel - optimumi leidmine ei ole matemaatilise mudeli kaudu garanteeritud. Kirjeldatud meetodite positiivseks k\"uljeks on nende suhteliselt madalad n\~ouded sihifunktsiooni karakteristikutele, mist\~ottu sobivad nad keerulise kujuga sihifunktsioonidele. Kuna aga k\"aesolevas t\"o\"os uuritav sihifunktsioon on esmapilgul suhteliselt healoomuline, ei ole v\"ahemalt esmapilgul heuristika kasutamine \~oigustatud.
+
+%%%%%%%%%%
+\section{Lahendamiseks vajalik infastruktuur}
+
+%%%%%%%%%%
+\section{Lahenduse integreerimine Eesti Energia \"uldisesse \"ari ja IT protsessidesse}
+
+
+%%%%%%%%%% BIBLIOGRAAFIA
+\begin{thebibliography}{9}
+\bibitem{hillier}
+  Frederick S. Hillier,
+  \emph{Introduction to Operations Research}.
+  McGraw-Hill, New York,
+  6th Edition,
+  1995.
+\bibitem{nocedal}
+  Jorge Nocedal, Stephen J. Wright,
+  \emph{Numerical Optimization}.
+  Springer, New York
+  1999
+\bibitem{ross}
+  Sheldon M. Ross,
+  \emph{Introduction to Probability Models}.
+  Elsevier, Burlington MA,
+  9th Edition,
+  2007.
+\bibitem{bartholdi}
+  John J. Bartholdi III, Steven T. Hackman,
+  \emph{Warehousing and Distribution Science}
+  Georgia Institute of Technology Atlanta, GA,
+  Version 0.95, http://www.warehouse-science.com
+\bibitem{sriyanyong}
+  Prichet Sriyanyong,
+  \emph{A Hybrid Particle Swarm Optimization Solution to Ramping Rate Constrained Dynamic Economic Dispatch}.
+  World Academy of Science, Engineering and Technology
+  Vol. 41, 2008, pp. 967-972
+\bibitem{alsumait}
+  J.S. Alsumait, M. Qasem, J.K. Sykulski, A.K. Al-Othman,
+  \emph{An improved Pattern Search based algorithm to solve the Dynamic Economic Dispatch problem with valve-point effect}.
+  Energy Conversion and Management,
+  Vol. 51 (2010), pp. 2062–2067
+\bibitem{elaiwa}
+  A.M. Elaiwa, X. Xiab, A.M. Shehatac,
+ \emph{Application of model predictive control to optimal dynamic dispatch of generation with emission limitations}.
+ Electric Power Systems Research,
+ Vol. 84 (2012), pp. 31–44
+\bibitem{xia}
+X. Xia and A. M. Elaiw,
+\emph{Dynamic Economic Dispatch: A Review}.
+The Online Journal on Electronics and Electrical Engineering (OJEEE),
+Vol. 2, No. 2, pp. 234-245
+\bibitem{zhang}
+Guo-Li Zhang, Hai-Yan Lu, Geng-Yin Li, Guang-Quan Zhang,
+\emph{Dynamic Economic Load Dispatch using hybrid genetic algorithm and the method of fuzzy number ranking}.
+Proceedings of the Fourth International Conference on Machine Learning and Cybernetics,
+Guangzhou, 18-21 August 2005, pp. 2472-2477
+\bibitem{kumar}
+C. Kumar, T. Alwarsamy,
+\emph{Dynamic Economic Dispatch – A Review of Solution Methodologies}
+European Journal of Scientific Research, ISSN 1450-216X,
+Vol.64, No.4 (2011), pp. 517-537
+\bibitem{swaroopan}
+N.M Jothi Swaroopan, P. Somasundaram,
+\emph{A Novel Combined Economic and Emission Dispatch Control by Hybrid Particle Swarm Optimization Technique}
+Majlesi Journal of Electrical Engineering, 
+Vol. 4, No. 2, June 2010, pp. 19-24
+\bibitem{khokhar}
+Bhuvnesh Khokhar, K. P. Singh Parma,
+\emph{A novel weight-improved particle swarm optimization for combined economic and emission dispatch problems}.
+International Journal of Engineering Science and Technology (IJEST), ISSN 0975-5462,
+Vol. 4,  No.05, May 2012, pp. 2015-2021
+\bibitem{pao-la-or}
+P. Pao-La-Or, A. Oonsivilai, T. Kulworawanichpong,
+\emph{Combined Economic and Emission Dispatch Using Particle Swarm Optimization}.
+WSEAS TRANSACTIONS on ENVIRONMENT and DEVELOPMENT, ISSN 1790-5079,
+Issue 4, Volume 6, April 2010, pp. 296-305
+\bibitem{pandian}
+S. Muthu Vijaya Pandian, K. Thanushkodi, P. S. Anjana, D. Dilesh, B. Kiruthika, C. S. Ramprabhu, A. Vibinth,
+\emph{An Efficient Particle Swarm Optimization Technique to Solve Combined Economic Emission Dispatch Problem}.
+European Journal of Scientific Research, ISSN 1450-216X,
+Vol.54, No.2 (2011), pp.187-192
+\end{thebibliography}
+
 \end{document}
